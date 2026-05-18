@@ -19,6 +19,7 @@
 
     <style>
         :root {
+            /* Dark theme (default) */
             --bg-color: #050e17;
             --surface-color: rgba(10, 25, 41, 0.7);
             --surface-border: rgba(255, 255, 255, 0.08);
@@ -26,14 +27,31 @@
             --primary-glow-rgb: 0, 255, 255;
             --accent-gold: #ffda63;
             --accent-gold-rgb: 255, 218, 99;
-            --text-primary: #d4e4fa;
+            --text-primary: #ffffff;
             --text-secondary: #94a3b8;
             --text-dim: #64748b;
+            --card-bg: rgba(10, 25, 41, 0.7);
             --font-main: 'Cairo', sans-serif;
             --font-data: 'Space Grotesk', sans-serif;
             --transition-speed: 0.3s;
             --radius-lg: 16px;
             --radius-md: 12px;
+            --logo-gradient: linear-gradient(135deg, #ffffff 0%, var(--text-secondary) 100%);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --surface-color: rgba(255, 255, 255, 0.85);
+            --surface-border: rgba(15, 23, 42, 0.08);
+            --primary-glow: #0ea5e9;
+            --primary-glow-rgb: 14, 165, 233;
+            --accent-gold: #b45309;
+            --accent-gold-rgb: 180, 83, 9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-dim: #64748b;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --logo-gradient: linear-gradient(135deg, #0f172a 0%, var(--text-secondary) 100%);
         }
 
         * {
@@ -55,6 +73,13 @@
                 radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 40%),
                 radial-gradient(circle at 90% 80%, rgba(255, 218, 99, 0.03) 0%, transparent 40%);
             background-attachment: fixed;
+            transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        [data-theme="light"] body {
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(14, 165, 233, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(180, 83, 9, 0.02) 0%, transparent 40%);
         }
 
         /* Ambient Glow Background Lines */
@@ -88,18 +113,19 @@
             z-index: 100;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            background: rgba(5, 14, 23, 0.8);
+            background: var(--surface-color);
             border-bottom: 1px solid var(--surface-border);
             padding: 1rem 2rem;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
         }
 
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .logo-sun {
@@ -127,9 +153,10 @@
             font-size: 1.3rem;
             font-weight: 800;
             letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #ffffff 0%, var(--text-secondary) 100%);
+            background: var(--logo-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            transition: color var(--transition-speed);
         }
 
         .badge-version {
@@ -327,7 +354,7 @@
         .card-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .card-description {
@@ -381,7 +408,7 @@
         .step-title {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
             margin-top: 1rem;
         }
@@ -432,7 +459,7 @@
         .tip-title {
             font-size: 1rem;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .tip-desc {
@@ -492,7 +519,7 @@
         .settings-label {
             font-size: 1rem;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
         }
 
         .settings-desc {
@@ -688,10 +715,11 @@
         }
 
         @media (max-width: 600px) {
-            header {
+            .app-header {
                 flex-direction: column;
                 gap: 1rem;
                 padding: 1.25rem;
+                text-align: center;
             }
 
             .nav-list {
@@ -1052,18 +1080,22 @@
 
     <!-- Header Section -->
     <div class="app-header">
-        <div class="logo-container" style="flex-direction: column; gap: 0.35rem; text-align: center;">
-            <div style="display: flex; align-items: center; gap: 0.75rem; justify-content: center;">
-                <span class="logo-text">Shams Assistant - مساعد شمس</span>
-                <span class="badge-version">v1.4.0</span>
+        <div class="logo-container" style="display: flex; align-items: center; gap: 1rem; text-align: right;">
+            <img src="assets/images/shams_molecular_logo.png" alt="Shams Assistant Logo" style="height: 46px; width: auto; object-fit: contain; filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.25)); transition: var(--transition-speed);">
+            <div style="display: flex; flex-direction: column; gap: 0.2rem; align-items: flex-start;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="logo-text">Shams Assistant - مساعد شمس</span>
+                    <span class="badge-version">v1.4.0</span>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--text-dim); font-family: 'Space Grotesk', sans-serif; font-weight: 500; opacity: 0.8; letter-spacing: 0.5px;">Developed by Amr Khallaf</span>
             </div>
-            <span
-                style="font-size: 0.75rem; color: var(--text-dim); font-family: 'Space Grotesk', sans-serif; font-weight: 500; opacity: 0.8; letter-spacing: 0.5px;">Developed
-                by Amr Khallaf</span>
         </div>
-        <div class="header-links" style="display: none;">
-            <a href="#"><i class="fa-solid fa-book-open"></i> التوثيق</a>
-            <a href="#"><i class="fa-solid fa-circle-question"></i> الدعم الفني</a>
+        
+        <!-- Theme Toggle Controls -->
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <button id="theme-toggle" class="btn btn-secondary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem; border-radius: 99px; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; border: 1px solid var(--surface-border); background: var(--surface-color); color: var(--text-primary); transition: all var(--transition-speed); font-family: var(--font-main); font-weight: 600;">
+                <i class="fa-solid fa-moon"></i> <span>وضع الليل</span>
+            </button>
         </div>
     </div>
 
@@ -1085,6 +1117,9 @@
                 </li>
                 <li class="nav-item" onclick="switchSection('pharmacist-section', this)">
                     <i class="fa-solid fa-prescription-bottle-medical"></i> وضع الصيدلي
+                </li>
+                <li class="nav-item" onclick="switchSection('reference-section', this)">
+                    <i class="fa-solid fa-hands"></i> تعليمات الإشارات
                 </li>
                 <li class="nav-item" onclick="switchSection('training-section', this)" style="display: none;">
                     <i class="fa-solid fa-graduation-cap"></i> وضع التدريب
@@ -1372,6 +1407,74 @@
                 </div>
             </section>
 
+            <!-- SECTION 7: SIGN LANGUAGE REFERENCE -->
+            <section id="reference-section" class="guide-section">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <i class="fa-solid fa-hands card-icon" style="color: var(--accent-gold); text-shadow: 0 0 15px rgba(255, 218, 99, 0.4);"></i>
+                            <h2 class="card-title">📖 قاموس ومخطط إشارات لغة الإشارة العربية</h2>
+                        </div>
+                        <span class="badge-version" style="background: rgba(255, 218, 99, 0.1); border-color: rgba(255, 218, 99, 0.3); color: var(--accent-gold); box-shadow: 0 0 10px rgba(255, 218, 99, 0.15);">دليل مصور</span>
+                    </div>
+                    <p class="card-description">
+                        نوفر لك هنا مرجعاً مصوراً شاملاً ومبسطاً لتعليمات لغة الإشارة العربية للحروف والأرقام. يساعدك هذا المرجع في إتقان تأدية الإشارات بشكل صحيح ليتمكن نظام الذكاء الاصطناعي من قراءتها بدقة فائقة.
+                    </p>
+
+                    <h3 class="step-title" style="margin-top: 1.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-info" style="color: var(--primary-glow);"></i> إرشادات هامة للحصول على أعلى دقة:</h3>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <span class="step-number">✨</span>
+                            <h4 class="step-title">ثبات اليد</h4>
+                            <p class="step-desc">حافظ على ثبات يدك لمدة ثانية واحدة أمام الكاميرا ليقوم النموذج بتأكيد القراءة بنجاح.</p>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-number">📏</span>
+                            <h4 class="step-title">المسافة المناسبة</h4>
+                            <p class="step-desc">اجعل يدك على مسافة 30 إلى 50 سم من عدسة كاميرا الهاتف لتغطية كامل مفاصل اليد.</p>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-number">💡</span>
+                            <h4 class="step-title">التباين الملون</h4>
+                            <p class="step-desc">يفضل أن تكون الخلفية متباينة مع لون بشرة اليد، مع تجنب الإضاءة الخلفية الشديدة.</p>
+                        </div>
+                    </div>
+
+                    <!-- Image Showcases side-by-side or stacked -->
+                    <div style="display: flex; flex-direction: column; gap: 2rem; margin-top: 2rem;">
+                        
+                        <!-- Alphabet Signs Card -->
+                        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--surface-border); border-radius: var(--radius-md); padding: 1.5rem; transition: border var(--transition-speed);">
+                            <h3 class="step-title" style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem; color: var(--accent-gold);">
+                                <i class="fa-solid fa-font"></i>
+                                إشارات الحروف الأبجدية العربية
+                            </h3>
+                            <p class="step-desc" style="margin-bottom: 1.5rem;">
+                                يوضح المخطط التالي الوضعية الدقيقة لكل حرف من الحروف الهجائية العربية المعتمدة في قاموس لغة الإشارة المحدث:
+                            </p>
+                            <div style="text-align: center; border-radius: 12px; overflow: hidden; background: #ffffff; padding: 1rem; border: 1px solid var(--surface-border);">
+                                <img src="assets/images/sign_letters.jpg" alt="Arabic Alphabet Sign Language Dictionary" style="max-width: 100%; height: auto; display: inline-block; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+                            </div>
+                        </div>
+
+                        <!-- Number Signs Card -->
+                        <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--surface-border); border-radius: var(--radius-md); padding: 1.5rem; transition: border var(--transition-speed);">
+                            <h3 class="step-title" style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem; color: var(--primary-glow);">
+                                <i class="fa-solid fa-arrow-1-9"></i>
+                                إشارات الأرقام العربية (0 - 9)
+                            </h3>
+                            <p class="step-desc" style="margin-bottom: 1.5rem;">
+                                يوضح المخطط التالي كيفية تمثيل الأرقام الحسابية من صفر إلى تسعة باستخدام أصابع يد واحدة بدقة تامة:
+                            </p>
+                            <div style="text-align: center; border-radius: 12px; overflow: hidden; background: #ffffff; padding: 1rem; border: 1px solid var(--surface-border);">
+                                <img src="assets/images/sign_numbers.jpg" alt="Arabic Numbers Sign Language Dictionary" style="max-width: 100%; height: auto; display: inline-block; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
             <!-- SECTION 6: SETTINGS -->
             <section id="settings-section" class="guide-section">
                 <div class="glass-card">
@@ -1540,6 +1643,38 @@
 
             // Add active class to clicked nav item
             element.classList.add('active');
+        }
+
+        // Day/Night Theme Toggling Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        
+        // Check for saved theme preference or default to dark
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeUI(savedTheme);
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeUI(newTheme);
+        });
+
+        function updateThemeUI(theme) {
+            const icon = themeToggleBtn.querySelector('i');
+            const text = themeToggleBtn.querySelector('span');
+            if (theme === 'light') {
+                icon.className = 'fa-solid fa-sun';
+                icon.style.color = '#b45309';
+                text.textContent = 'وضع النهار';
+                themeToggleBtn.style.borderColor = 'rgba(15, 23, 42, 0.15)';
+            } else {
+                icon.className = 'fa-solid fa-moon';
+                icon.style.color = 'var(--primary-glow)';
+                text.textContent = 'وضع الليل';
+                themeToggleBtn.style.borderColor = 'var(--surface-border)';
+            }
         }
     </script>
 </body>
