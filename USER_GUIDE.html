@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="الدليل التفاعلي الحديث لمساعد شمس - رفيقك الذكي لتسهيل التواصل والتعامل اليومي">
+    <title>دليل المستخدم | مساعد شمس (Shams Assistant)</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-color: #050e17;
+            --surface-color: rgba(10, 25, 41, 0.7);
+            --surface-border: rgba(255, 255, 255, 0.08);
+            --primary-glow: #00ffff;
+            --primary-glow-rgb: 0, 255, 255;
+            --accent-gold: #ffda63;
+            --accent-gold-rgb: 255, 218, 99;
+            --text-primary: #d4e4fa;
+            --text-secondary: #94a3b8;
+            --text-dim: #64748b;
+            --font-main: 'Cairo', sans-serif;
+            --font-data: 'Space Grotesk', sans-serif;
+            --transition-speed: 0.3s;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 218, 99, 0.03) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* Ambient Glow Background Lines */
+        .ambient-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .ambient-glow::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.08) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            filter: blur(80px);
+        }
+
+        /* Header Styling */
+        .app-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(5, 14, 23, 0.8);
+            border-bottom: 1px solid var(--surface-border);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-sun {
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            text-shadow: 0 0 15px rgba(255, 218, 99, 0.6);
+            animation: pulse-sun 4s infinite ease-in-out;
+        }
+
+        @keyframes pulse-sun {
+
+            0%,
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+                filter: brightness(1.3);
+            }
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-version {
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: var(--primary-glow);
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
+            font-family: var(--font-data);
+            font-weight: 700;
+            border-radius: 99px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
+        }
+
+        .header-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .header-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition-speed);
+        }
+
+        .header-links a:hover {
+            color: var(--primary-glow);
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Main Workspace */
+        .workspace {
+            flex: 1;
+            display: flex;
+            max-width: 1400px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            gap: 2rem;
+        }
+
+        /* Sidebar Styling (RTL layout) */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--surface-border);
+            padding-bottom: 0.75rem;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+            transition: var(--transition-speed);
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: var(--primary-glow);
+            background: rgba(0, 255, 255, 0.05);
+            border-color: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.05) inset;
+        }
+
+        .nav-item.active i {
+            color: var(--primary-glow);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        /* Content Area Styling */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Guide Section View Container */
+        .guide-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .guide-section.active {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: border var(--transition-speed);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            color: var(--primary-glow);
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Step-by-Step Grid Layout */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            transition: all var(--transition-speed) ease;
+            position: relative;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 255, 0.2);
+            background: rgba(0, 255, 255, 0.01);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .step-number {
+            font-family: var(--font-data);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: rgba(0, 255, 255, 0.2);
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            line-height: 1;
+            transition: var(--transition-speed);
+        }
+
+        .step-card:hover .step-number {
+            color: var(--primary-glow);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+        }
+
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .step-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Alert/Tips Section */
+        .tips-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tip-block {
+            display: flex;
+            gap: 1rem;
+            background: rgba(255, 218, 99, 0.03);
+            border: 1px solid rgba(255, 218, 99, 0.1);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            align-items: flex-start;
+            transition: var(--transition-speed);
+        }
+
+        .tip-block:hover {
+            border-color: rgba(255, 218, 99, 0.3);
+            background: rgba(255, 218, 99, 0.05);
+        }
+
+        .tip-icon {
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px rgba(255, 218, 99, 0.4);
+            margin-top: 0.2rem;
+        }
+
+        .tip-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .tip-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .tip-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Settings Option Styling */
+        .settings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            transition: var(--transition-speed);
+        }
+
+        .settings-item:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .settings-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .settings-item-icon {
+            font-size: 1.2rem;
+            color: var(--primary-glow);
+            background: rgba(0, 255, 255, 0.05);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+        }
+
+        .settings-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .settings-label {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .settings-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .settings-action {
+            font-family: var(--font-data);
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+            border: 1px solid rgba(255, 218, 99, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            background: rgba(255, 218, 99, 0.05);
+        }
+
+        /* Action Buttons */
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid transparent;
+            font-family: var(--font-main);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-glow) 0%, #00b3b3 100%);
+            color: #050e17;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border-color: rgba(255, 218, 99, 0.3);
+            color: var(--accent-gold);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 218, 99, 0.05);
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 218, 99, 0.15);
+        }
+
+        /* Interactive Demo Box */
+        .demo-box {
+            margin-top: 1.5rem;
+            border: 1px dashed rgba(0, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            background: rgba(0, 255, 255, 0.01);
+        }
+
+        .demo-screen {
+            width: 100%;
+            max-width: 320px;
+            height: 200px;
+            background: #02070d;
+            border: 1px solid var(--surface-border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-screen::after {
+            content: 'إطار الكاميرا للمطورين';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .demo-hand {
+            font-size: 4rem;
+            color: var(--accent-gold);
+            animation: wave 2s infinite ease-in-out;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(15deg) scale(1.05);
+            }
+        }
+
+        .demo-text-box {
+            position: absolute;
+            bottom: 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid var(--primary-glow);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary-glow);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+        }
+
+        /* Footer styling */
+        footer {
+            margin-top: auto;
+            background: rgba(5, 14, 23, 0.9);
+            border-top: 1px solid var(--surface-border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: var(--transition-speed);
+        }
+
+        .footer-links a:hover {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .workspace {
+                flex-direction: column;
+                padding: 0 1rem;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .nav-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .nav-item {
+                flex: 1 1 140px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem;
+            }
+
+            .nav-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Device Showcase layout */
+        .showcase-container {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .showcase-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 100% 100%, rgba(0, 255, 255, 0.03) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .showcase-content {
+            flex: 1;
+        }
+
+        .showcase-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .showcase-list li {
+            position: relative;
+            padding-right: 1.75rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .showcase-list li::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 0;
+            top: 2px;
+            color: var(--primary-glow);
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+        }
+
+        .device-mockup-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .device-mockup {
+            width: 250px;
+            height: 500px;
+            background: #02070d;
+            border: 12px solid #16202c;
+            border-radius: 38px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 255, 255, 0.03);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .device-mockup:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: #202e3f;
+            box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 255, 255, 0.08);
+        }
+
+        .device-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 18px;
+            background: #16202c;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 10;
+            transition: all var(--transition-speed);
+        }
+
+        .device-mockup:hover .device-notch {
+            background: #202e3f;
+        }
+
+        .device-screenshot {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 24px;
+        }
+
+        .device-caption {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .showcase-container {
+                flex-direction: column;
+                padding: 1.5rem;
+                gap: 2rem;
+            }
+            .device-mockup {
+                width: 220px;
+                height: 440px;
+            }
+        }
+
+        /* Print styling for professional multipage PDF generation */
+        @media print {
+            :root {
+                --text-primary: #0f172a !important;
+                --text-secondary: #1e293b !important;
+                --text-dim: #475569 !important;
+                --card-bg: #ffffff !important;
+                --surface-border: #cbd5e1 !important;
+                --primary-glow: #0f766e !important;
+                --accent-gold: #b45309 !important;
+            }
+
+            html, body {
+                background: #ffffff !important;
+                background-color: #ffffff !important;
+                color: #0f172a !important;
+                font-size: 11pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            h1, h2, h3, h4, h5, h6, .card-title, .step-title, .tip-title, .settings-label, .showcase-list li strong {
+                color: #0f172a !important;
+                background: none !important;
+                -webkit-text-fill-color: initial !important;
+            }
+
+            .ambient-glow, .sidebar, .app-header .badge-version, footer, .btn-container, .demo-box {
+                display: none !important;
+            }
+
+            .badge-version {
+                background: #f1f5f9 !important;
+                color: #0f766e !important;
+                border-color: #cbd5e1 !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
+            }
+
+            /* Hide disabled sections */
+            #blind-section, #training-section {
+                display: none !important;
+            }
+
+            .app-header {
+                position: relative !important;
+                top: auto !important;
+                display: block !important;
+                width: 100% !important;
+                padding: 1rem 0 !important;
+                border-bottom: 2px solid #e2e8f0 !important;
+                margin-bottom: 2rem !important;
+                background: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .app-header .logo-text {
+                color: #0f172a !important;
+                font-size: 20pt !important;
+                background: none !important;
+                -webkit-text-fill-color: initial !important;
+            }
+
+            .workspace {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .content-area {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .guide-section {
+                display: block !important;
+                opacity: 1 !important;
+                transform: none !important;
+                page-break-before: always !important;
+                break-before: page !important;
+                margin-bottom: 2rem !important;
+            }
+
+            .guide-section:first-of-type {
+                page-break-before: avoid !important;
+                break-before: avoid !important;
+            }
+
+            .glass-card {
+                background: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
+                box-shadow: none !important;
+                color: #0f172a !important;
+                backdrop-filter: none !important;
+                padding: 1.5rem !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+            }
+
+            .card-title-group i {
+                color: #0f766e !important;
+                text-shadow: none !important;
+            }
+
+            .steps-grid {
+                display: block !important;
+            }
+
+            .step-card {
+                background: #f8fafc !important;
+                border: 1px solid #e2e8f0 !important;
+                margin-bottom: 1rem !important;
+                padding: 1.25rem !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .showcase-container {
+                display: grid !important;
+                grid-template-columns: 1fr 240px !important;
+                gap: 2rem !important;
+                background: #f8fafc !important;
+                border: 1px solid #e2e8f0 !important;
+                padding: 1.5rem !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .showcase-content {
+                display: block !important;
+            }
+
+            .device-mockup-wrapper {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .device-mockup {
+                width: 200px !important;
+                height: 400px !important;
+                border: 8px solid #0f172a !important;
+                border-radius: 20px !important;
+                background: #ffffff !important;
+                box-shadow: none !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .device-notch {
+                width: 80px !important;
+                height: 14px !important;
+                background: #0f172a !important;
+            }
+
+            .device-screenshot {
+                border-radius: 12px !important;
+            }
+
+            .settings-list {
+                display: block !important;
+            }
+
+            .settings-item {
+                background: #f8fafc !important;
+                border: 1px solid #e2e8f0 !important;
+                margin-bottom: 0.75rem !important;
+                padding: 1rem !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .settings-item-icon {
+                background: #f1f5f9 !important;
+                color: #0f766e !important;
+            }
+
+            .settings-action {
+                border: 1px solid #cbd5e1 !important;
+                background: #ffffff !important;
+                color: #0f172a !important;
+            }
+
+            .tips-section {
+                display: block !important;
+            }
+
+            .tip-block {
+                background: #f8fafc !important;
+                border: 1px solid #e2e8f0 !important;
+                margin-bottom: 1rem !important;
+                padding: 1rem !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <!-- Header Section -->
+    <div class="app-header">
+        <div class="logo-container" style="flex-direction: column; gap: 0.35rem; text-align: center;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; justify-content: center;">
+                <span class="logo-text">Shams Assistant - مساعد شمس</span>
+                <span class="badge-version">v1.4.0</span>
+            </div>
+            <span
+                style="font-size: 0.75rem; color: var(--text-dim); font-family: 'Space Grotesk', sans-serif; font-weight: 500; opacity: 0.8; letter-spacing: 0.5px;">Developed
+                by Amr Khallaf</span>
+        </div>
+        <div class="header-links" style="display: none;">
+            <a href="#"><i class="fa-solid fa-book-open"></i> التوثيق</a>
+            <a href="#"><i class="fa-solid fa-circle-question"></i> الدعم الفني</a>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="workspace">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-title">أوضاع الاستخدام</div>
+            <ul class="nav-list">
+                <li class="nav-item active" onclick="switchSection('home-section', this)">
+                    <i class="fa-solid fa-house"></i> الشاشة الرئيسية
+                </li>
+                <li class="nav-item" onclick="switchSection('deaf-section', this)">
+                    <i class="fa-solid fa-hands-asl-interpreting"></i> وضع الصم
+                </li>
+                <li class="nav-item" onclick="switchSection('blind-section', this)" style="display: none;">
+                    <i class="fa-solid fa-eye-slash"></i> وضع المكفوفين
+                </li>
+                <li class="nav-item" onclick="switchSection('pharmacist-section', this)">
+                    <i class="fa-solid fa-prescription-bottle-medical"></i> وضع الصيدلي
+                </li>
+                <li class="nav-item" onclick="switchSection('training-section', this)" style="display: none;">
+                    <i class="fa-solid fa-graduation-cap"></i> وضع التدريب
+                </li>
+                <li class="nav-item" onclick="switchSection('settings-section', this)">
+                    <i class="fa-solid fa-sliders"></i> الإعدادات
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Dynamic Content Area -->
+        <main class="content-area">
+
+            <!-- SECTION 1: HOME -->
+            <section id="home-section" class="guide-section active">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <i class="fa-solid fa-house card-icon"></i>
+                            <h2 class="card-title">شاشة اختيار الوضع الرئيسي</h2>
+                        </div>
+                        <span class="badge-version"
+                            style="background: rgba(255,218,99,0.1); border-color: rgba(255,218,99,0.3); color: var(--accent-gold);">لوحة
+                            التحكم</span>
+                    </div>
+                    <p class="card-description">
+                        تعتبر **شاشة اختيار الوضع (Mode Selector)** هي الواجهة الأساسية التي ترحب بك عند تشغيل التطبيق
+                        بعد شاشة الترحيب (Splash). تم تصميمها بنمط عصري بسيط ووصول سريع بنقرة واحدة لتلائم كافة ظروف
+                        الاستخدام اليومية.
+                    </p>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <span class="step-number">01</span>
+                            <h4 class="step-title">شاشة الترحيب</h4>
+                            <p class="step-desc">تهيئة سريعة وتحميل لملفات النماذج الذكية المحدثة تلقائياً.</p>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-number">02</span>
+                            <h4 class="step-title">واجهة سهلة</h4>
+                            <p class="step-desc">رموز كبيرة وواضحة تناسب مختلف الفئات وتدعم الإيماءات اللمسية.</p>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-number">03</span>
+                            <h4 class="step-title">أداء فوري</h4>
+                            <p class="step-desc">تنقل انسيابي وبسرعة استجابة فائقة تعتمد على تسريع الأجهزة.</p>
+                        </div>
+                    </div>
+
+                    <!-- Device Showcase -->
+                    <div class="showcase-container">
+                        <div class="showcase-content">
+                            <h3 class="step-title" style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-glow);"></i>
+                                الواجهة التفاعلية الرئيسية
+                            </h3>
+                            <p class="step-desc" style="margin-bottom: 1rem; font-size: 0.95rem;">
+                                عند تشغيل التطبيق بنجاح، ستستقبلك هذه الواجهة العصرية البسيطة والمريحة للعين، وتتكون من الأقسام التالية للتسهيل عليك:
+                            </p>
+                            <ul class="showcase-list">
+                                <li>
+                                    <strong>مترجم لغة الإشارة:</strong> الوضع الأساسي لترجمة إشارات اليد إلى نصوص منطوقة ومكتوبة (دعم كامل للحروف والأرقام العربية).
+                                </li>
+                                <li>
+                                    <strong>استجابة الصيدلي:</strong> أداة مخصصة لتمكين الصيدلي من قراءة الردود والتفاعل معك لتقديم الخدمة العلاجية بأسرع وقت.
+                                </li>
+                                <li>
+                                    <strong>ترس الإعدادات (أعلى اليسار):</strong> للتحكم الكامل في خيارات النظام، تحديث النماذج، وضبط تفضيلات الصوت والتنبيهات.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="device-mockup-wrapper">
+                            <div class="device-mockup">
+                                <div class="device-notch"></div>
+                                <img src="assets/images/main_screen.jpg" alt="Shams Assistant Main Screen" class="device-screenshot">
+                            </div>
+                            <span class="device-caption">الواجهة الرئيسية لتطبيق مساعد شمس</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: DEAF MODE -->
+            <section id="deaf-section" class="guide-section">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <i class="fa-solid fa-hands-asl-interpreting card-icon"></i>
+                            <h2 class="card-title">🧏‍♂️ وضع الصم (Deaf Mode)</h2>
+                        </div>
+                        <span class="badge-version">رؤية حاسوبية</span>
+                    </div>
+                    <p class="card-description">
+                        الركيزة الأساسية لتطبيق شمس! يتيح هذا الوضع ترجمة لغة الإشارة العربية (حروفاً وأرقاماً) إلى نصوص
+                        منطوقة ومكتوبة بشكل فوري ومستقر بالكامل على جهازك باستخدام الذكاء الاصطناعي.
+                    </p>
+
+                    <h3 class="step-title" style="margin-top: 1.5rem;"><i class="fa-solid fa-circle-play"
+                            style="color: var(--primary-glow);"></i> خطوات البدء والتواصل:</h3>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <span class="step-number">1</span>
+                            <h4 class="step-title">افتح وضع الصم</h4>
+                            <p class="step-desc">انقر على زر وضع الصم من الواجهة لتبدأ تشغيل نظام تتبع المفاصل.</p>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-number">2</span>
+                            <h4 class="step-title">وجه الكاميرا</h4>
+                            <p class="step-desc">ضع الكاميرا أمام يديك على بعد مناسب بمسافةقريبه في مكان مضاء.</p>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-number">3</span>
+                            <h4 class="step-title">قم بأداء الإشارة</h4>
+                            <p class="step-desc">يقوم التطبيق بالتعرف فوراً على نقاط اليد وتحويل الإشارة لنصوص.</p>
+                        </div>
+                    </div>
+
+                    <div class="demo-box">
+                        <h4 class="step-title" style="margin: 0;"><i class="fa-solid fa-display"></i> محاكاة تفاعلية
+                            للتعرف الفوري:</h4>
+                        <div class="demo-screen">
+                            <i class="fa-solid fa-hand-spock demo-hand"></i>
+                            <div class="demo-text-box">الترجمة الفورية: حرف "س"</div>
+                        </div>
+                    </div>
+
+                    <!-- Device Showcase -->
+                    <div class="showcase-container">
+                        <div class="showcase-content">
+                            <h3 class="step-title" style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-glow);"></i>
+                                واجهة مترجم لغة الإشارة
+                            </h3>
+                            <p class="step-desc" style="margin-bottom: 1rem; font-size: 0.95rem;">
+                                واجهة متكاملة توفر لك كامل الأدوات اللازمة للترجمة الدقيقة والسريعة:
+                            </p>
+                            <ul class="showcase-list">
+                                <li>
+                                    <strong>التبديل بين الحروف والأرقام:</strong> يمكنك التبديل الفوري بنقرة واحدة لتحديد نوع التصنيف الذي تريد ترجمته.
+                                </li>
+                                <li>
+                                    <strong>وضع الكاميرا والتعرف:</strong> انقر على زر "بدء التعرف" ليقوم التطبيق بالتقاط الإيماءات من خلال خوارزميات الذكاء الاصطناعي المباشرة.
+                                </li>
+                                <li>
+                                    <strong>لوحة نتائج الترجمة (أسفل):</strong> تعرض الحروف والكلمات المكتشفة مع أدوات المسح، إضافة المسافات، ونطق النص المترجم صوتياً لمساعدة الطرف الآخر على سماعك.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="device-mockup-wrapper">
+                            <div class="device-mockup">
+                                <div class="device-notch"></div>
+                                <img src="assets/images/deaf_mode.jpg" alt="Shams Assistant Deaf Mode" class="device-screenshot">
+                            </div>
+                            <span class="device-caption">واجهة مترجم الإشارة في تطبيق شمس</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: BLIND MODE -->
+            <section id="blind-section" class="guide-section">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <i class="fa-solid fa-eye-slash card-icon"></i>
+                            <h2 class="card-title">🧑‍🦯 وضع المكفوفين (Blind Mode)</h2>
+                        </div>
+                        <span class="badge-version"
+                            style="background: rgba(255,218,99,0.1); border-color: rgba(255,218,99,0.3); color: var(--accent-gold);">صوتي
+                            بالكامل</span>
+                    </div>
+                    <p class="card-description">
+                        تفاعل صوتي ذكي يُمكّن غير المبصرين من إدارة التطبيق والحصول على قراءة صوتية دقيقة للنصوص،
+                        واكتشاف الأجسام، وحركة المحيطين عبر الهاتف.
+                    </p>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <span class="step-number">🎙️</span>
+                            <h4 class="step-title">الأوامر الصوتية</h4>
+                            <p class="step-desc">تحكم كامل بالتطبيق عبر التحدث مباشرة بفضل معالجة اللغة الطبيعية
+                                الفائقة.</p>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-number">🔊</span>
+                            <h4 class="step-title">التوجيه الصوتي المستمر</h4>
+                            <p class="step-desc">نظام قراءة صوتية شامل ينبئك بكل تفصيل على الشاشة ويقودك خطوة بخطوة.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: PHARMACIST MODE -->
+            <section id="pharmacist-section" class="guide-section">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <i class="fa-solid fa-prescription-bottle-medical card-icon"></i>
+                            <h2 class="card-title">⚕️ وضع الصيدلي (Pharmacist Mode)</h2>
+                        </div>
+                        <span class="badge-version">طبي وتطبيقي</span>
+                    </div>
+                    <p class="card-description">
+                        مستوى تواصل ثوري مصمم لمساعدة صيادله شمس في فهم متطلبات واحتياجات المرضى الصم
+                        بكفاءة وسرعة، مع توضيح الجرعات الدوائية بدقة.
+                    </p>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <span class="step-number">🩺</span>
+                            <h4 class="step-title">صرف الأدوية</h4>
+                            <p class="step-desc">توضيح إرشادات استخدام العقاقير بالجرعات والتعليمات بلغة الإشارة أو
+                                الصوت.</p>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-number">📊</span>
+                            <h4 class="step-title">تسهيل التواصل</h4>
+                            <p class="step-desc">شاشات ثنائية تظهر الترجمة للصيدلي بلغة مفهومة وتعرض للمريض إشارته
+                                بوضوح.</p>
+                        </div>
+                    </div>
+
+                    <!-- Device Showcase -->
+                    <div class="showcase-container">
+                        <div class="showcase-content">
+                            <h3 class="step-title" style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-glow);"></i>
+                                واجهة استجابة الصيدلي
+                            </h3>
+                            <p class="step-desc" style="margin-bottom: 1rem; font-size: 0.95rem;">
+                                صُممت لتسهيل إدخال وتوضيح ردود الكادر الطبي للمريض بأبسط طريقة ممكنة:
+                            </p>
+                            <ul class="showcase-list">
+                                <li>
+                                    <strong>إدخال صوتي ذكي (ميكروفون):</strong> بلمسة واحدة على زر الميكروفون الذهبي، يمكن للصيدلي التحدث ليقوم التطبيق بتحويل كلامه فوراً إلى نص مكتوب بدقة فائقة.
+                                </li>
+                                <li>
+                                    <strong>مساحة عرض النص الكبيرة:</strong> شاشة زجاجية واضحة ومريحة تضمن قراءة الرد بوضوح وبحجم خط مريح للمريض الأصم.
+                                </li>
+                                <li>
+                                    <strong>المرونة اللغوية:</strong> يدعم التطبيق إمكانية قراءة وإدخال النصوص بالتوافق التام مع اللغتين العربية والإنجليزية.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="device-mockup-wrapper">
+                            <div class="device-mockup">
+                                <div class="device-notch"></div>
+                                <img src="assets/images/pharmacist_mode.jpg" alt="Shams Assistant Pharmacist Mode" class="device-screenshot">
+                            </div>
+                            <span class="device-caption">واجهة استجابة الصيدلي في تطبيق شمس</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: TRAINING MODE -->
+            <section id="training-section" class="guide-section">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <i class="fa-solid fa-graduation-cap card-icon"></i>
+                            <h2 class="card-title">🎓 وضع التدريب والتعليم (Training Mode)</h2>
+                        </div>
+                        <span class="badge-version">تفاعلي بالكامل</span>
+                    </div>
+                    <p class="card-description">
+                        سواء كنت مبتدئاً أو محترفاً، صُممت بيئة التدريب لتساعدك في إتقان لغة الإشارة العربية والحصول على
+                        تصحيح فوري ومباشر لحركة يديك.
+                    </p>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <span class="step-number">📖</span>
+                            <h4 class="step-title">مكتبة الإشارات الفاخرة</h4>
+                            <p class="step-desc">تصفح دليل مصور شامل لكل حرف ورقم ومصطلح في لغة الإشارة.</p>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-number">🎯</span>
+                            <h4 class="step-title">تقييم الذكاء الاصطناعي</h4>
+                            <p class="step-desc">قم بتجربة أداء الإشارة أمام الكاميرا وسيعطيك التطبيق نسبة تطابق فورية.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 6: SETTINGS -->
+            <section id="settings-section" class="guide-section">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <i class="fa-solid fa-sliders card-icon"></i>
+                            <h2 class="card-title">⚙️ إعدادات النظام (System Settings)</h2>
+                        </div>
+                        <span class="badge-version">تخصيص كامل</span>
+                    </div>
+                    <p class="card-description">
+                        قم بتعديل وتطويع خصائص التطبيق بما يناسب بيئتك واحتياجاتك الفردية لضمان أفضل تجربة تفاعلية.
+                    </p>
+
+                    <div class="settings-list">
+                        <div class="settings-item">
+                            <div class="settings-info">
+                                <div class="settings-item-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                                <div class="settings-text">
+                                    <span class="settings-label">حساسية الالتقاط والتعرف</span>
+                                    <span class="settings-desc">تحسين الاستجابة حسب مهارة وحركة يد المستخدم.</span>
+                                </div>
+                            </div>
+                            <span class="settings-action">متوسط</span>
+                        </div>
+
+                        <div class="settings-item">
+                            <div class="settings-info">
+                                <div class="settings-item-icon"><i class="fa-solid fa-microchip"></i></div>
+                                <div class="settings-text">
+                                    <span class="settings-label">تحديث النماذج والموديلات (TFLite)</span>
+                                    <span class="settings-desc">تحميل أحدث التحسينات البرمجية محلياً.</span>
+                                </div>
+                            </div>
+                            <span class="settings-action"><i class="fa-solid fa-cloud-arrow-down"></i> تحديث</span>
+                        </div>
+
+                        <div class="settings-item">
+                            <div class="settings-info">
+                                <div class="settings-item-icon"><i class="fa-solid fa-volume-high"></i></div>
+                                <div class="settings-text">
+                                    <span class="settings-label">درجة وسرعة الصوت</span>
+                                    <span class="settings-desc">إعدادات النطق والتوجيه الصوتي لوضع المكفوفين.</span>
+                                </div>
+                            </div>
+                            <span class="settings-action">1.0x</span>
+                        </div>
+                    </div>
+
+                    <!-- Device Showcase -->
+                    <div class="showcase-container">
+                        <div class="showcase-content">
+                            <h3 class="step-title" style="margin-top: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fa-solid fa-mobile-screen-button" style="color: var(--primary-glow);"></i>
+                                واجهة لوحة الإعدادات
+                            </h3>
+                            <p class="step-desc" style="margin-bottom: 1rem; font-size: 0.95rem;">
+                                تحكم كامل بجميع تفاصيل وأداء التطبيق بكل سلاسة من خلال شاشة الإعدادات الشاملة:
+                            </p>
+                            <ul class="showcase-list">
+                                <li>
+                                    <strong>لغة التطبيق:</strong> تتيح لك التبديل السهل وفائق السرعة بين اللغات المختلفة لتوافق مثالي مع تفضيلاتك.
+                                </li>
+                                <li>
+                                    <strong>التحكم في الصوت وسرعة الكلام:</strong> تخصيص سرعة وطبقة قراءة النصوص المترجمة صوتياً لتلائم تفضيلاتك، مما يسهل كثيراً على ذوي الهمم سماع وفهم الكلمات.
+                                </li>
+                                <li>
+                                    <strong>معلومات الإصدار والدعم:</strong> قسم مخصص يعطيك لمحة كاملة حول حقوق التطبيق، إصدار النماذج الذكية المستخدمة، وكيفية التواصل.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="device-mockup-wrapper">
+                            <div class="device-mockup">
+                                <div class="device-notch"></div>
+                                <img src="assets/images/settings_screen.jpg" alt="Shams Assistant Settings Screen" class="device-screenshot">
+                            </div>
+                            <span class="device-caption">لوحة إعدادات تطبيق مساعد شمس</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COMMON GLASS PANEL FOR PERFORMANCE TIPS -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <i class="fa-solid fa-lightbulb card-icon"
+                            style="color: var(--accent-gold); text-shadow: 0 0 15px rgba(255, 218, 99, 0.4);"></i>
+                        <h2 class="card-title">نصائح للأداء الفائق</h2>
+                    </div>
+                </div>
+
+                <div class="tips-section">
+                    <div class="tip-block">
+                        <i class="fa-solid fa-sun tip-icon"></i>
+                        <div class="tip-content">
+                            <span class="tip-title">1. بيئة الإضاءة</span>
+                            <span class="tip-desc">تأكد من وجود مصدر إضاءة ساطع ومباشر أمامك. تجنب الإضاءة الخلفية
+                                القوية التي قد تشوش على عدسة الكاميرا وتصنع ظلالاً.</span>
+                        </div>
+                    </div>
+
+                    <div class="tip-block">
+                        <i class="fa-solid fa-image tip-icon"></i>
+                        <div class="tip-content">
+                            <span class="tip-title">2. بساطة الخلفية</span>
+                            <span class="tip-desc">حاول الوقوف أمام جدار سادة أو خلفية هادئة. وجود حركة مفرطة في الخلفية
+                                قد يؤدي لتأخير طفيف في معالجة إشارات اليد.</span>
+                        </div>
+                    </div>
+
+                    <div class="tip-block" style="display: none;">
+                        <i class="fa-solid fa-arrows-rotate tip-icon"></i>
+                        <div class="tip-content">
+                            <span class="tip-title">3. تحديثات الذكاء الاصطناعي</span>
+                            <span class="tip-desc">تأكد من اتصالك بالإنترنت دورياً لتحديث النماذج الذكية مباشرة من
+                                إعدادات النظام، للحصول على أعلى دقة ممكنة في تصنيف الإشارات.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="btn btn-primary" onclick="alert('سيتم فتح نافذة الطباعة والتصدير الآن. يرجى اختيار الحفظ بتنسيق PDF (Save as PDF) لتحميل الدليل كملف PDF بالكامل.'); window.print();"><i
+                            class="fa-solid fa-file-pdf"></i> تحميل الدليل PDF</button>
+                    <button class="btn btn-secondary" onclick="window.open('https://drive.google.com/file/d/1RPszCVRTZfV_537SbJ_Sm3fvB1IXQnX1/view?usp=drivesdk', '_blank')"><i
+                            class="fa-solid fa-download"></i> بدء الاستخدام وتنزيل التطبيق</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-logo">
+            <span style="font-weight: 700; color: var(--text-primary);">مساعد شمس</span>
+        </div>
+        <div class="footer-links" style="display: none;">
+            <a href="#">الشروط والأحكام</a>
+            <a href="#">سياسة الخصوصية</a>
+            <a href="#">اتصل بنا</a>
+        </div>
+        <p>Developed by Amr Khallaf - Copyright © 2026</p>
+    </footer>
+
+    <!-- Vanilla Javascript for Premium Tabs Integration -->
+    <script>
+        function switchSection(sectionId, element) {
+            // Remove active class from all sections
+            const sections = document.querySelectorAll('.guide-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // Remove active class from all nav items
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // Add active class to selected section
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.classList.add('active');
+                window.scrollTo({
+                    top: activeSection.offsetTop - 120,
+                    behavior: 'smooth'
+                });
+            }
+
+            // Add active class to clicked nav item
+            element.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
